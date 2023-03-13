@@ -17,3 +17,7 @@ This is the first version of the Restaurant Cost Management System in Python. Al
 
 I hope you enjoy using this system and stay tuned for future updates!``` 
 
+# Update log
+## 12/03/2023 0.0.2
+Now you can export a csv file instead of txt
+
