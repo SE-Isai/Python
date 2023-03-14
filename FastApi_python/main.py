@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Body
 from fastapi.responses import HTMLResponse, JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 
 
@@ -10,9 +10,9 @@ app.version == "0.0.1"
 
 class Movie(BaseModel):
     id: Optional[int] = None
-    title: str
-    overview: str
-    year: int
+    title: str = Field(default = 'Mi pelicula', min_lenght=5, max_lenght=15)
+    overview: str = Field(default = 'Descripcion de la pelicula', min_lenght=15, max_lenght=50)
+    year: int = Field(default = 2022, Le=2022)
     rating: float
     category: str
 
