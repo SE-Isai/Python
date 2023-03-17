@@ -68,7 +68,7 @@ def guardar_productos(productos):
     print('Archivo guardado satisfactoriamente')
 
 # Función principal para ejecutar el programa
-def main():
+def Add_item():
     # Inicializar la interfaz gráfica
     global productos_listbox, nombre_entry, precio_entry, total_label, costo_entry, productos
     productos = leer_productos()
@@ -118,4 +118,4 @@ def main():
 
 # Iniciar el programa
 if __name__ == "__main__":
-    main()
+    Add_item()
