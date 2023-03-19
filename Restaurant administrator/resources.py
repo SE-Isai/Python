@@ -3,26 +3,31 @@ import tkinter as tk
 import tkinter.messagebox as messagebox
 import csv
 
+
 # Función para mostrar la lista de productos
-def mostrar_productos():
-    productos_listbox.delete(0, tk.END)
+def mostrar_productos(productos,cuadro):
+    cuadro.delete(0, tk.END)
     for producto in productos:
             nombre = producto["Nombre"]
             precio = producto["Precio"]
             costo = producto["Costo"]
-            productos_listbox.insert(tk.END, f"{nombre}: ${precio:.2f} Costo: {costo:.2f}")
+            cuadro.insert(tk.END, f"{nombre}: ${precio:.2f} Costo: {costo:.2f}")
         
 
 # Función para agregar un producto
-def agregar_producto():
+def agregar_producto(productos):
     try:
         nombre = nombre_entry.get()
+        print('TEST PASSED1')
         precio = float(precio_entry.get())
+        print('TEST PASSED2')
         costo = float(costo_entry.get())
+        print('TEST PASSED3')
         producto = {"Nombre": nombre, "Precio": precio, "Costo": costo}
         productos.append(producto)
+        print('FINAL TEST PASSED')
         guardar_productos(productos)
-        mostrar_productos()
+        mostrar_productos(productos,productos_listbox)
         nombre_entry.delete(0, tk.END)
         precio_entry.delete(0, tk.END)
         costo_entry.delete(0, tk.END)
@@ -30,14 +35,14 @@ def agregar_producto():
         messagebox.showerror("Error", "Los datos deben ser numéricos")
 
 # Función para eliminar un producto
-def eliminar_producto():
+def eliminar_producto(productos):
     nombre = productos_listbox.get(tk.ACTIVE).split(":")[0]
     for i, producto in enumerate(productos):
         if producto["Nombre"] == nombre:
             del productos[i]
             break
     guardar_productos(productos)
-    mostrar_productos()
+    mostrar_productos(productos,productos_listbox)
 
 
 
@@ -70,9 +75,9 @@ def guardar_productos(productos):
 # Función principal para ejecutar el programa
 def Add_item():
     # Inicializar la interfaz gráfica
-    global productos_listbox, nombre_entry, precio_entry, total_label, costo_entry, productos
+    global productos_listbox, nombre_entry, precio_entry, total_label, costo_entry
     productos = leer_productos()
-    ventana = tk.Tk()
+    ventana = tk.Toplevel()
     ventana.title("Sistema de administración de costos de restaurante")
 
     # Crear los widgets de la interfaz gráfica
@@ -84,8 +89,8 @@ def Add_item():
     precio_entry = tk.Entry(ventana)
     costo_label = tk.Label(ventana, text="Costo:")
     costo_entry = tk.Entry(ventana)
-    agregar_boton = tk.Button(ventana, text="Agregar", command=agregar_producto)
-    eliminar_boton = tk.Button(ventana, text="Eliminar", command=eliminar_producto)
+    agregar_boton = tk.Button(ventana, text="Agregar", command=lambda: agregar_producto(productos))
+    eliminar_boton = tk.Button(ventana, text="Eliminar", command=lambda: eliminar_producto(productos))
     total_label = tk.Label(ventana, text="")
 
     # Colocar los widgets en la interfaz gráfica
@@ -111,7 +116,7 @@ def Add_item():
     costo_label.configure(width=10)
 
     # Mostrar la lista de productos y el total de costos
-    mostrar_productos()
+    mostrar_productos(productos,productos_listbox)
 
     # Ejecutar la interfaz gráfica
     ventana.mainloop()
