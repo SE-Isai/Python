@@ -11,7 +11,7 @@ def mostrar_productos(productos,cuadro):
             nombre = producto["Nombre"]
             precio = producto["Precio"]
             costo = producto["Costo"]
-            cuadro.insert(tk.END, f"{nombre}: ${precio:.2f} Costo: {costo:.2f}")
+            cuadro.insert(tk.END, f"{nombre}: ${precio:.2f}: Costo: {costo:.2f}")
         
 
 # Función para agregar un producto
