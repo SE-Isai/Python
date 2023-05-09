@@ -1,33 +1,50 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
+from .models import Question, Choice
+from django.views import generic
 
-# Create your views here.
+# def index(request):
+#     latest_question_list = Question.objects.all()
+#     return render(request, "polls/index.html", {
+#         # * La variable ahora está disponible en index.html
+#         "latest_question_list": latest_question_list
+#     })
 
-def index(request):
-    html_response = """
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Hola Mundo</title>
-            <style>
-                body {
-                    background-color: #fdfd96;
-                    font-family: Arial, sans-serif;
-                    font-size: 24px;
-                    color: #333;
-                    text-align: center;
-                    margin-top: 50px;
-                }
-                h1 {
-                    font-size: 48px;
-                    margin-bottom: 50px;
-                }
-            </style>
-        </head>
-        <body>
-            <h1>Hola Mundo</h1>
-            <p>¡Bienvenido al maravilloso mundo de la programación!</p>
-        </body>
-        </html>
-    """
-    return HttpResponse(html_response)
+# def detail(request, question_id):
+#     question = get_object_or_404(Question, pk=question_id)
+#     return render(request, "polls/detail.html",{
+#         "question": question
+#     })
+
+# def result(request, question_id):
+#     question = get_object_or_404(Question, pk = question_id)
+#     return render(request,"polls/results.html",{"question":question})
+
+class IndexView(generic.ListView):
+    template_name = "polls/index.html"
+    context_object_name = "latest question_list"
+
+    def get_queryset(self):
+        """Return the last five published questions"""
+        return Question.objects.order_by("-pub_date")[:5]
+
+class DetailView(generic.DetailView):
+    model = Question
+    template_name = "polls/detail.html"
+
+class ResultView(generic.DetailView):
+    model = Question
+    template_name = "polls/results.html"
+
+
+def vote(request, question_id):
+    question = get_object_or_404(Question, pk = question_id)
+    try:
+        selected_choice = question.choice_set.get(pk=request.POST["choice"])
+    except(KeyError, Choice.DoesNotExist):
+        return render(request, "polls/detail.html", {"question":question,"error_message": "No elegiste una respuesta"})
+    else: 
+        selected_choice.votes += 1
+        selected_choice.save()
+        return HttpResponseRedirect(reverse("polls:result", args=(question.id, )))
